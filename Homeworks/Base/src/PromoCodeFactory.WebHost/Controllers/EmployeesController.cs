@@ -70,5 +70,67 @@ namespace PromoCodeFactory.WebHost.Controllers
 
             return employeeModel;
         }
+
+        /// <summary>
+        /// Создание сотрудника
+        /// </summary>
+        /// <returns>Созданного сотрудника или ошибку</returns>
+        [HttpPost("{employee:Employee}")]
+        public async Task<ActionResult<Employee>> CreateEmployeeAsync(Employee employee)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdEmployee = await _employeeRepository.CreateAsync(employee);
+
+            return employee;
+        }
+
+        /// <summary>
+        /// Обновление сотрудника
+        /// </summary>
+        /// <returns>Обновленного сотрудника или ошибку</returns>
+        [HttpPost("{empl:Employee}")]
+
+        public async Task<ActionResult<Employee>> UpdateEmployeeAsync(Employee empl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var e = await _employeeRepository.GetByIdAsync(empl.Id);
+            if (e == null)
+                return NotFound();
+
+            await _employeeRepository.UpdateAsync(empl);
+            return empl;
+        }
+
+        /// <summary>
+        /// Удаление сотрудника
+        /// </summary>
+        /// <returns>список без удаленного сотрудника </returns>
+        [HttpPost("{id:guid}")]
+        public async Task<List<EmployeeShortResponse>> DeleteEmployeeAsync(Guid id)
+        {
+
+            var employees = await _employeeRepository.DeleteAsync(id);
+            var result = employees.Select(x=>
+            new EmployeeShortResponse()
+            {
+                Id = x.Id,
+                Email = x.Email,
+                FullName = x.FullName,
+            }).ToList();
+            return result;
+        }
+
+
+
+
+
+
     }
 }
