@@ -1,13 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PromoCodeFactory.Core.Domain.Administration;
 using PromoCodeFactory.Core.Domain.PromoCodeManagement;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PromoCodeFactory.DataAccess.Data
 {
     public static class FakeDataFactory
     {
+
+        public static void Seed(DataContext context) {
+
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+
+            context.Employees.AddRange(Employees);
+            context.Roles.AddRange(Roles);
+            context.Preferences.AddRange(Preferences);
+            context.Customers.AddRange(Customers);
+
+            context.SaveChanges();
+
+            }
+
+
         public static IEnumerable<Employee> Employees => new List<Employee>()
         {
             new Employee()
