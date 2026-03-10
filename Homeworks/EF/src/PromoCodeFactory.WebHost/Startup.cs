@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PromoCodeFactory.Core.Abstractions.Repositories;
@@ -7,13 +8,19 @@ using PromoCodeFactory.Core.Domain.Administration;
 using PromoCodeFactory.Core.Domain.PromoCodeManagement;
 using PromoCodeFactory.DataAccess.Data;
 using PromoCodeFactory.DataAccess.Repositories;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace PromoCodeFactory.WebHost
 {
     public class Startup
     {
+
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -25,6 +32,11 @@ namespace PromoCodeFactory.WebHost
                 new InMemoryRepository<Preference>(FakeDataFactory.Preferences));
             services.AddScoped(typeof(IRepository<Customer>), (x) =>
                 new InMemoryRepository<Customer>(FakeDataFactory.Customers));
+
+            services.AddDbContext<DataContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("DataBaseConnection")));
+
+
 
             services.AddOpenApiDocument(options =>
             {
@@ -43,6 +55,12 @@ namespace PromoCodeFactory.WebHost
             else
             {
                 app.UseHsts();
+            }
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+                DbInitializer.Initialize(context);
             }
 
             app.UseOpenApi();
