@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: system-ui, sans-serif;
+  margin: 2rem;
+  max-width: 720px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+th {
+  background: #f0f0f0;
+}
+.error {
+  color: #c00;
+}

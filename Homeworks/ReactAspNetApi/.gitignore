@@ -1,0 +1,7 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/ClientApp/dist/
+weather-vite-client/dist/
+.vs/
+*.user
