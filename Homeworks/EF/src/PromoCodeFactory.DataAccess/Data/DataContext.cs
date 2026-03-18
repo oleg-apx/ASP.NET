@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PromoCodeFactory.Core.Domain;
 using PromoCodeFactory.Core.Domain.Administration;
 using PromoCodeFactory.Core.Domain.PromoCodeManagement;
@@ -38,7 +38,7 @@ namespace PromoCodeFactory.DataAccess.Data
 
               
                 entity.HasOne(e => e.Role)
-                    .WithMany()
+                    .WithMany(r => r.Employees)
                     .HasForeignKey(e => e.RoleId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
@@ -131,7 +131,7 @@ namespace PromoCodeFactory.DataAccess.Data
 
                 
                 entity.HasOne(p => p.Preference)
-                    .WithMany()
+                    .WithMany(pr => pr.PromoCodes)
                     .HasForeignKey(p => p.PreferenceId)
                     .OnDelete(DeleteBehavior.Restrict);
 

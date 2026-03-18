@@ -1,4 +1,4 @@
-﻿using PromoCodeFactory.Core.Domain;
+using PromoCodeFactory.Core.Domain;
 using PromoCodeFactory.Core.Domain.PromoCodeManagement;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace PromoCodeFactory.Core.Domain.Administration
         /// <summary>
         /// Связь с Role
         /// </summary>
-        public int RoleId { get; set; }
+        public Guid RoleId { get; set; }
         public Role Role { get; set; }
 
         /// <summary>

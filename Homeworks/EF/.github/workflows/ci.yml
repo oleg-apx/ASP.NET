@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: promocodefactory
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d promocodefactory"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    defaults:
+      run:
+        working-directory: src
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore PromoCodeFactory.sln
+
+      - name: Build
+        run: dotnet build PromoCodeFactory.sln --no-restore -c Release
+
+      - name: Install EF tools
+        run: |
+          dotnet tool install --global dotnet-ef --version 9.0.10
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Apply database migrations
+        env:
+          ConnectionStrings__DataBaseConnection: >-
+            Host=localhost;Port=5432;Database=promocodefactory;Username=postgres;Password=postgres
+        run: |
+          dotnet ef database update \
+            --project PromoCodeFactory.DataAccess \
+            --startup-project PromoCodeFactory.WebHost

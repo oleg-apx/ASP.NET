@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using PromoCodeFactory.Core.Domain.Administration;
 
@@ -22,19 +22,19 @@ namespace PromoCodeFactory.Core.Domain.PromoCodeManagement
         /// <summary>
         /// Связь с Preference
         /// </summary>
-        public int? PreferenceId { get; set; }
+        public Guid? PreferenceId { get; set; }
         public Preference Preference { get; set; }
 
         /// <summary>
         /// Связь с Customer (один-ко-многим)
         /// </summary>
-        public int? CustomerId { get; set; }
+        public Guid? CustomerId { get; set; }
         public Customer Customer { get; set; }
 
         /// <summary>
         /// Связь с Employee (кто создал промокод)
         /// </summary>
-        public int? CreatedByEmployeeId { get; set; }
+        public Guid? CreatedByEmployeeId { get; set; }
         public Employee CreatedByEmployee { get; set; }
     }
 }

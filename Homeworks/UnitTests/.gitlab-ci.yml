@@ -1,3 +1,7 @@
+stages:
+  - test
+  - build
+
 image: docker:stable
 
 services:
@@ -5,6 +9,14 @@ services:
 
 before_script:
   - docker info
+
+test:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - cd src
+    - dotnet restore PromoCodeFactory.sln
+    - dotnet test PromoCodeFactory.sln --no-restore --verbosity normal
 
 build:
   only:
@@ -17,5 +29,5 @@ build:
   after_script:
     - docker logout ${CI_REGISTRY}
   stage: build
-  tags: 
+  tags:
     - docker

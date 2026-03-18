@@ -8,17 +8,17 @@ using PromoCodeFactory.Core.Domain.Administration;
 using PromoCodeFactory.Core.Domain.PromoCodeManagement;
 using PromoCodeFactory.DataAccess.Data;
 using PromoCodeFactory.DataAccess.Repositories;
-using System.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace PromoCodeFactory.WebHost
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
@@ -34,7 +34,7 @@ namespace PromoCodeFactory.WebHost
                 new InMemoryRepository<Customer>(FakeDataFactory.Customers));
 
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DataBaseConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DataBaseConnection")));
 
 
 
